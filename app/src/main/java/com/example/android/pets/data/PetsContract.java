@@ -12,10 +12,10 @@ public final class PetsContract {
     private PetsContract() {}
 
     /** Inner class that defines the table structure of the pets table */
-    public final class PetsEntry implements BaseColumns {
+    public final class PetEntry implements BaseColumns {
 
         /** Prevent creating instance of this class */
-        private PetsEntry() {}
+        private PetEntry() {}
 
         public static final String TABLE_NAME = "pets";
 
