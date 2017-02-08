@@ -61,6 +61,12 @@ public class CatalogActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        displayDatabaseInfo();
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu options from the res/menu/menu_catalog.xml file.
         // This adds menu items to the app bar.
@@ -107,12 +113,17 @@ public class CatalogActivity extends AppCompatActivity {
         // and pass the context, which is the current activity.
         PetDbHelper mDbHelper = new PetDbHelper(this);
 
+        String[] projection = {
+                PetEntry.COLUMN_PET_NAME,
+                PetEntry.COLUMN_PET_BREED
+        };
+
         // Create and/or open a database to read from it
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
 
         // Perform this raw SQL query "SELECT * FROM pets"
         // to get a Cursor that contains all rows from the pets table.
-        Cursor cursor = db.rawQuery("SELECT * FROM " + PetEntry.TABLE_NAME, null);
+        Cursor cursor = db.query(PetEntry.TABLE_NAME, projection, null, null, null, null, null);
         try {
             // Display the number of rows in the Cursor (which reflects the number of rows in the
             // pets table in the database).
