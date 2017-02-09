@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import com.example.android.pets.data.PetsContract.PetEntry;
+import com.example.android.pets.data.PetContract.PetEntry;
 
 /**
  * Created by cloudemployee on 08/02/2017.

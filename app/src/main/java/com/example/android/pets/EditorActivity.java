@@ -31,7 +31,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.android.pets.data.PetDbHelper;
-import com.example.android.pets.data.PetsContract.PetEntry;
+import com.example.android.pets.data.PetContract.PetEntry;
 
 /**
  * Allows user to create a new pet or edit an existing one.
