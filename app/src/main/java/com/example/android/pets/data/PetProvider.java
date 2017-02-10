@@ -116,7 +116,7 @@ public class PetProvider extends ContentProvider {
         }
 
         Integer gender = values.getAsInteger(PetEntry.COLUMN_PET_GENDER);
-        if ( gender == null || !genderIsValid(gender) ) {
+        if ( gender == null || !isGenderValid(gender) ) {
             throw new IllegalArgumentException("Pet requires a valid gender.");
         }
 
@@ -134,7 +134,7 @@ public class PetProvider extends ContentProvider {
     }
 
     /** Validate if the input value for gender is valid */
-    private boolean genderIsValid(Integer gender) {
+    private boolean isGenderValid(Integer gender) {
         switch (gender) {
             case PetEntry.GENDER_MALE:
             case PetEntry.GENDER_FEMALE:
@@ -173,6 +173,38 @@ public class PetProvider extends ContentProvider {
 
     @Override
     public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
+
+        // gender
+        boolean isValuesContainsPetGender = values.containsKey(PetEntry.COLUMN_PET_GENDER);
+        Integer petGender = values.getAsInteger(PetEntry.COLUMN_PET_GENDER);
+        if (isValuesContainsPetGender && !isGenderValid(petGender)) {
+            throw new IllegalArgumentException("Pet requires a valid gender.");
+        }
+
+        // weight
+        boolean isValuesContainsPetWeight = values.containsKey(PetEntry.COLUMN_PET_WEIGHT);
+        Integer petWeight = values.getAsInteger(PetEntry.COLUMN_PET_WEIGHT);
+        if (isValuesContainsPetWeight && petWeight <= 0) {
+            throw new IllegalArgumentException("Pet requires a valid weight.");
+        }
+
+        final int matchCode = sUriMatcher.match(uri);
+        switch (matchCode) {
+            case PETS:
+                return updatePet(uri, values, selection, selectionArgs);
+            case PET_ID:
+                selection = PetEntry._ID + "=?";
+
+                long id = ContentUris.parseId(uri);
+                selectionArgs = new String[] { String.valueOf(id) };
+
+                return updatePet(uri, values, selection, selectionArgs);
+        }
         return 0;
+    }
+
+    private int updatePet(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
+        SQLiteDatabase db = mPetDbHelper.getWritableDatabase();
+        return db.update(PetEntry.TABLE_NAME, values, selection, selectionArgs);
     }
 }
