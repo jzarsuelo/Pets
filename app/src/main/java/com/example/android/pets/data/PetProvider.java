@@ -105,12 +105,45 @@ public class PetProvider extends ContentProvider {
     public Uri insert(Uri uri, ContentValues values) {
         final int matchCode = sUriMatcher.match(uri);
 
+        String name = values.getAsString(PetEntry.COLUMN_PET_NAME);
+        if (name == null) {
+            throw new IllegalArgumentException("Pet requires a name");
+        }
+
+        String breed = values.getAsString(PetEntry.COLUMN_PET_BREED);
+        if (breed == null) {
+            throw new IllegalArgumentException("Pet requires a breed");
+        }
+
+        Integer gender = values.getAsInteger(PetEntry.COLUMN_PET_GENDER);
+        if ( gender == null || !genderIsValid(gender) ) {
+            throw new IllegalArgumentException("Pet requires a valid gender.");
+        }
+
+        Integer weight = values.getAsInteger(PetEntry.COLUMN_PET_WEIGHT);
+        if (weight != null || weight <= 0) {
+            throw new IllegalArgumentException("Pet requires a valid weight.");
+        }
+
         switch (matchCode) {
             case PETS:
                 return insertPet(uri, values);
             default:
                 throw new IllegalArgumentException("Cannot query unknown URI " + uri);
         }
+    }
+
+    /** Validate if the input value for gender is valid */
+    private boolean genderIsValid(Integer gender) {
+        switch (gender) {
+            case PetEntry.GENDER_MALE:
+            case PetEntry.GENDER_FEMALE:
+            case PetEntry.GENDER_UNKNOWN:
+                return true;
+            default:
+                return false;
+        }
+
     }
 
     /**

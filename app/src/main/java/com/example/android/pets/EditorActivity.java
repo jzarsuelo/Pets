@@ -153,7 +153,7 @@ public class EditorActivity extends AppCompatActivity {
         values.put(PetEntry.COLUMN_PET_NAME, name);
         values.put(PetEntry.COLUMN_PET_BREED, breed);
         values.put(PetEntry.COLUMN_PET_GENDER, mGender);
-        values.put(PetEntry.COLUMN_PET_WEIGHT, Integer.parseInt(weight));
+        values.put(PetEntry.COLUMN_PET_WEIGHT, weight);
 
         Uri insertedPetUri = getContentResolver().insert(PetEntry.CONTENT_URI, values);
 
