@@ -173,21 +173,6 @@ public class PetProvider extends ContentProvider {
 
     @Override
     public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
-
-        // gender
-        boolean isValuesContainsPetGender = values.containsKey(PetEntry.COLUMN_PET_GENDER);
-        Integer petGender = values.getAsInteger(PetEntry.COLUMN_PET_GENDER);
-        if (isValuesContainsPetGender && !isGenderValid(petGender)) {
-            throw new IllegalArgumentException("Pet requires a valid gender.");
-        }
-
-        // weight
-        boolean isValuesContainsPetWeight = values.containsKey(PetEntry.COLUMN_PET_WEIGHT);
-        Integer petWeight = values.getAsInteger(PetEntry.COLUMN_PET_WEIGHT);
-        if (isValuesContainsPetWeight && petWeight <= 0) {
-            throw new IllegalArgumentException("Pet requires a valid weight.");
-        }
-
         final int matchCode = sUriMatcher.match(uri);
         switch (matchCode) {
             case PETS:
@@ -204,6 +189,34 @@ public class PetProvider extends ContentProvider {
     }
 
     private int updatePet(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
+        // name
+        if (values.containsKey(PetEntry.COLUMN_PET_NAME)) {
+            String name = values.getAsString(PetEntry.COLUMN_PET_NAME);
+            if (name == null) {
+                throw new IllegalArgumentException("Pet requires a name");
+            }
+        }
+
+        // gender
+        if (values.containsKey(PetEntry.COLUMN_PET_GENDER)) {
+            Integer gender = values.getAsInteger(PetEntry.COLUMN_PET_GENDER);
+            if ( gender == null || !isGenderValid(gender) ) {
+                throw new IllegalArgumentException("Pet requires a valid gender.");
+            }
+        }
+
+        // weight
+        if (values.containsKey(PetEntry.COLUMN_PET_WEIGHT)) {
+            Integer weight = values.getAsInteger(PetEntry.COLUMN_PET_WEIGHT);
+            if (weight == null || weight <= 0) {
+                throw new IllegalArgumentException("Pet requires a valid weight.");
+            }
+        }
+
+        if (values.size() == 0) {
+            return 0;
+        }
+
         SQLiteDatabase db = mPetDbHelper.getWritableDatabase();
         return db.update(PetEntry.TABLE_NAME, values, selection, selectionArgs);
     }
