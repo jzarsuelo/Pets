@@ -156,12 +156,15 @@ public class EditorActivity extends AppCompatActivity {
         values.put(PetEntry.COLUMN_PET_WEIGHT, Integer.parseInt(weight));
 
         Uri insertedPetUri = getContentResolver().insert(PetEntry.CONTENT_URI, values);
-        long id = ContentUris.parseId(insertedPetUri);
 
-        String message = getString(R.string.msg_success_insert);
-        message = String.format(message, id);
-        if ( id < 0) {
+        String message;
+
+        if (insertedPetUri == null) {
             message = getString(R.string.msg_failed_insert);
+        } else {
+            long id = ContentUris.parseId(insertedPetUri);
+            message = getString(R.string.msg_success_insert);
+            message = String.format(message, id);
         }
 
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
