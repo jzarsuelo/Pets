@@ -15,8 +15,10 @@
  */
 package com.example.android.pets;
 
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
@@ -153,8 +155,8 @@ public class EditorActivity extends AppCompatActivity {
         values.put(PetEntry.COLUMN_PET_GENDER, mGender);
         values.put(PetEntry.COLUMN_PET_WEIGHT, Integer.parseInt(weight));
 
-        SQLiteDatabase db = mDbHelper.getWritableDatabase();
-        long id = db.insert(PetEntry.TABLE_NAME, null, values);
+        Uri insertedPetUri = getContentResolver().insert(PetEntry.CONTENT_URI, values);
+        long id = ContentUris.parseId(insertedPetUri);
 
         String message = "Pet saved with id: " + id;
         if ( id < 0) {

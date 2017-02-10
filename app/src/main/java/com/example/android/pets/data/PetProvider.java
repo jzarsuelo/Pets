@@ -117,8 +117,9 @@ public class PetProvider extends ContentProvider {
      * for that specific row in the database.
      */
     private Uri insertPet(Uri uri, ContentValues values) {
+        SQLiteDatabase db = mPetDbHelper.getWritableDatabase();
 
-        // TODO: Insert a new pet into the pets database table with the given ContentValues
+        long id = db.insert(PetEntry.TABLE_NAME, null, values);
 
         // Once we know the ID of the new row in the table,
         // return the new URI with the ID appended to the end of it
