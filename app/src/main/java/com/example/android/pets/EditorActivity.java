@@ -158,9 +158,10 @@ public class EditorActivity extends AppCompatActivity {
         Uri insertedPetUri = getContentResolver().insert(PetEntry.CONTENT_URI, values);
         long id = ContentUris.parseId(insertedPetUri);
 
-        String message = "Pet saved with id: " + id;
+        String message = getString(R.string.msg_success_insert);
+        message = String.format(message, id);
         if ( id < 0) {
-            message = "Error with saving pet.";
+            message = getString(R.string.msg_failed_insert);
         }
 
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
