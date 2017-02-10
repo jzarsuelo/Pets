@@ -109,10 +109,6 @@ public class CatalogActivity extends AppCompatActivity {
      * the pets database.
      */
     private void displayDatabaseInfo() {
-        // To access our database, we instantiate our subclass of SQLiteOpenHelper
-        // and pass the context, which is the current activity.
-        PetDbHelper mDbHelper = new PetDbHelper(this);
-
         String[] projection = {
                 PetEntry._ID,
                 PetEntry.COLUMN_PET_NAME,
@@ -121,10 +117,7 @@ public class CatalogActivity extends AppCompatActivity {
                 PetEntry.COLUMN_PET_WEIGHT
         };
 
-        // Perform this raw SQL query "SELECT * FROM pets"
-        // to get a Cursor that contains all rows from the pets table.
-        // Cursor cursor = db.query(PetEntry.TABLE_NAME, null, null, null, null, null, null);
-
+        // Perform a query using a ContentProvider
         Cursor cursor = getContentResolver().query(PetEntry.CONTENT_URI, projection, null, null, null);
 
         try {
@@ -135,16 +128,11 @@ public class CatalogActivity extends AppCompatActivity {
             StringBuilder stringBuilder = new StringBuilder("Number of rows in pets database table: ")
                     .append(cursor.getCount())
                     .append("\n\n")
-                    .append(PetEntry._ID)
-                    .append(" - ")
-                    .append(PetEntry.COLUMN_PET_NAME)
-                    .append(" - ")
-                    .append(PetEntry.COLUMN_PET_BREED)
-                    .append(" - ")
-                    .append(PetEntry.COLUMN_PET_GENDER)
-                    .append(" - ")
-                    .append(PetEntry.COLUMN_PET_WEIGHT)
-                    .append("\n\n");
+                    .append(PetEntry._ID).append(" - ")
+                    .append(PetEntry.COLUMN_PET_NAME).append(" - ")
+                    .append(PetEntry.COLUMN_PET_BREED).append(" - ")
+                    .append(PetEntry.COLUMN_PET_GENDER).append(" - ")
+                    .append(PetEntry.COLUMN_PET_WEIGHT).append("\n\n");
 
             boolean continueReadingFromCursor = cursor.moveToFirst();
             if ( continueReadingFromCursor ) {
@@ -164,14 +152,10 @@ public class CatalogActivity extends AppCompatActivity {
                     int weight = cursor.getInt(weightIndex);
 
                     stringBuilder.append(id)
-                            .append(" - ")
-                            .append(name)
-                            .append(" - ")
-                            .append(breed)
-                            .append(" - ")
-                            .append(gender)
-                            .append(" - ")
-                            .append(weight)
+                            .append(" - ").append(name)
+                            .append(" - ").append(breed)
+                            .append(" - ").append(gender)
+                            .append(" - ").append(weight)
                             .append("\n");
 
                     continueReadingFromCursor = cursor.moveToNext();
