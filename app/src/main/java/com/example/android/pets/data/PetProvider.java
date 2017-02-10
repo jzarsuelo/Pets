@@ -1,10 +1,13 @@
 package com.example.android.pets.data;
 
 import android.content.ContentProvider;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
+import com.example.android.pets.data.PetContract.PetEntry;
 import android.support.annotation.Nullable;
 
 /**
@@ -51,7 +54,42 @@ public class PetProvider extends ContentProvider {
     @Nullable
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
-        return null;
+        SQLiteDatabase db = mPetDbHelper.getReadableDatabase();
+
+        Cursor cursor = null;
+        int matchCode = sUriMatcher.match(uri);
+        switch (matchCode) {
+            case PETS:
+                // For the PETS code, query the pets table directly with the given
+                // projection, selection, selection arguments, and sort order. The cursor
+                // could contain multiple rows of the pets table.
+                // TODO: Perform database query on pets table
+                break;
+            case PET_ID:
+                // For the PET_ID code, extract out the ID from the URI.
+                // For an example URI such as "content://com.example.android.pets/pets/3",
+                // the selection will be "_id=?" and the selection argument will be a
+                // String array containing the actual ID of 3 in this case.
+                //
+                // For every "?" in the selection, we need to have an element in the selection
+                // arguments that will fill in the "?". Since we have 1 question mark in the
+                // selection, we have 1 String in the selection arguments' String array.
+                selection = PetEntry._ID+"=?";
+                selectionArgs = new String [] { String.valueOf(ContentUris.parseId(uri)) };
+
+                cursor = db.query(PetEntry.TABLE_NAME,
+                            projection,
+                            selection,
+                            selectionArgs,
+                            null,
+                            null,
+                            sortOrder);
+                break;
+            default:
+                throw new IllegalArgumentException("Cannot query unknown URI " + uri);
+        }
+
+        return cursor;
     }
 
     @Nullable
