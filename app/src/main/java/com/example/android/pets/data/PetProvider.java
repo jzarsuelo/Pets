@@ -131,7 +131,7 @@ public class PetProvider extends ContentProvider {
         }
 
         Integer weight = values.getAsInteger(PetEntry.COLUMN_PET_WEIGHT);
-        if (weight != null || weight <= 0) {
+        if (weight == null || weight <= 0) {
             throw new IllegalArgumentException("Pet requires a valid weight.");
         }
 
