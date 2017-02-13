@@ -27,6 +27,7 @@ import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -169,7 +170,22 @@ public class EditorActivity extends AppCompatActivity
     private void savePet() {
         String name = mNameEditText.getText().toString().trim();
         String breed = mBreedEditText.getText().toString().trim();
-        String weight = mWeightEditText.getText().toString().trim();
+        String weightString = mWeightEditText.getText().toString().trim();
+
+        if ( TextUtils.isEmpty(name) && TextUtils.isEmpty(breed)
+                && mGender == PetEntry.GENDER_UNKNOWN  ) {
+            return;
+        }
+
+        int weight = 0;
+        if ( !TextUtils.isEmpty(weightString) ) {
+            try {
+                weight = Integer.parseInt(weightString);
+                weight = (weight < 0) ? 0 : weight;
+            } catch (NumberFormatException e) {
+                Log.e(LOG_TAG, "User input is not a number. Value for weight will be (0).");
+            }
+        }
 
         ContentValues values = new ContentValues();
         values.put(PetEntry.COLUMN_PET_NAME, name);
