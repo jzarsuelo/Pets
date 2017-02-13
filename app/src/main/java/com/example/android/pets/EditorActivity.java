@@ -44,8 +44,6 @@ public class EditorActivity extends AppCompatActivity {
 
     private static final String LOG_TAG = EditorActivity.class.getSimpleName();
 
-    public static final String EXTRA_PET_ID = EditorActivity.class.getSimpleName() + ".EXTRA_PET_ID";
-
     /** EditText field to enter the pet's name */
     private EditText mNameEditText;
 
@@ -81,9 +79,11 @@ public class EditorActivity extends AppCompatActivity {
         mDbHelper = new PetDbHelper(this);
 
         Intent intent = getIntent();
-        long id = intent.getLongExtra(EXTRA_PET_ID, -1l);
+        Uri currentPetUri = intent.getData();
 
-        if (id >= 0) {
+        if (currentPetUri == null) {
+            setTitle( getString(R.string.editor_activity_title_new_pet) );
+        } else {
             setTitle( getString(R.string.editor_activity_title_edit_pet) );
         }
 
