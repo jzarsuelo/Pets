@@ -2,9 +2,13 @@ package com.example.android.pets;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
+import android.widget.TextView;
+
+import com.example.android.pets.data.PetContract.PetEntry;
 
 /**
  * {@link PetCursorAdapter} is an adapter for a list or grid view
@@ -34,7 +38,7 @@ public class PetCursorAdapter extends CursorAdapter {
      */
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
-        return null;
+        return LayoutInflater.from(context).inflate(R.layout.list_item, parent, false);
     }
 
 
@@ -50,6 +54,19 @@ public class PetCursorAdapter extends CursorAdapter {
      */
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
+        // get index
+        final int nameIndex = cursor.getColumnIndex(PetEntry.COLUMN_PET_NAME);
+        final int breedIndex = cursor.getColumnIndex(PetEntry.COLUMN_PET_BREED);
 
+        // extract data
+        final String name = cursor.getString( nameIndex );
+        final String breed = cursor.getString( breedIndex );
+
+        // bind data to view
+        TextView nameTextView = (TextView) view.findViewById(R.id.name);
+        nameTextView.setText(name);
+
+        TextView summaryTextView = (TextView) view.findViewById(R.id.summary);
+        summaryTextView.setText( breed );
     }
 }
