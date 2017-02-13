@@ -150,7 +150,7 @@ public class EditorActivity extends AppCompatActivity
         switch (item.getItemId()) {
             // Respond to a click on the "Save" menu option
             case R.id.action_save:
-                insertPet();
+                savePet();
                 finish();
                 return true;
             // Respond to a click on the "Delete" menu option
@@ -166,7 +166,7 @@ public class EditorActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    private void insertPet() {
+    private void savePet() {
         String name = mNameEditText.getText().toString().trim();
         String breed = mBreedEditText.getText().toString().trim();
         String weight = mWeightEditText.getText().toString().trim();
@@ -177,16 +177,20 @@ public class EditorActivity extends AppCompatActivity
         values.put(PetEntry.COLUMN_PET_GENDER, mGender);
         values.put(PetEntry.COLUMN_PET_WEIGHT, weight);
 
-        Uri insertedPetUri = getContentResolver().insert(PetEntry.CONTENT_URI, values);
+        boolean isTransactionSuccessful = true;
+        if (mCurrentPetUri == null) {
+            Uri insertedPetUri = getContentResolver().insert(PetEntry.CONTENT_URI, values);
+            isTransactionSuccessful = (insertedPetUri != null);
+        } else {
+            int rowsUpdated = getContentResolver().update(mCurrentPetUri, values, null, null);
+            isTransactionSuccessful = (rowsUpdated == 1);
+        }
 
         String message;
-
-        if (insertedPetUri == null) {
-            message = getString(R.string.msg_failed_insert);
-        } else {
-            long id = ContentUris.parseId(insertedPetUri);
+        if (isTransactionSuccessful) {
             message = getString(R.string.msg_success_insert);
-            message = String.format(message, id);
+        } else {
+            message = getString(R.string.msg_failed_insert);
         }
 
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
