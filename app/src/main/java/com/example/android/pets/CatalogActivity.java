@@ -75,7 +75,7 @@ public class CatalogActivity extends AppCompatActivity
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Uri uri = Uri.withAppendedPath(PetContract.BASE_CONTENT_URI, String.valueOf(id));
+                Uri uri = Uri.withAppendedPath(PetEntry.CONTENT_URI, String.valueOf(id));
 
                 Intent intent = new Intent(CatalogActivity.this, EditorActivity.class);
                 intent.setData(uri);
