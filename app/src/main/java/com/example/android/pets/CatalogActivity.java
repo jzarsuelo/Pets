@@ -31,6 +31,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.example.android.pets.data.PetContract.PetEntry;
@@ -70,6 +71,15 @@ public class CatalogActivity extends AppCompatActivity
         ListView listView = (ListView) findViewById(R.id.pet_list);
         listView.setAdapter(mCursorAdapter);
         listView.setEmptyView(emptyView);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(CatalogActivity.this, EditorActivity.class);
+                intent.putExtra(EditorActivity.EXTRA_PET_ID, id);
+
+                startActivity(intent);
+            }
+        });
     }
 
     @Override

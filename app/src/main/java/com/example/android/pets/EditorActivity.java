@@ -17,12 +17,14 @@ package com.example.android.pets;
 
 import android.content.ContentUris;
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -39,6 +41,10 @@ import com.example.android.pets.data.PetContract.PetEntry;
  * Allows user to create a new pet or edit an existing one.
  */
 public class EditorActivity extends AppCompatActivity {
+
+    private static final String LOG_TAG = EditorActivity.class.getSimpleName();
+
+    public static final String EXTRA_PET_ID = EditorActivity.class.getSimpleName() + ".EXTRA_PET_ID";
 
     /** EditText field to enter the pet's name */
     private EditText mNameEditText;
@@ -73,6 +79,14 @@ public class EditorActivity extends AppCompatActivity {
         setupSpinner();
         
         mDbHelper = new PetDbHelper(this);
+
+        Intent intent = getIntent();
+        long id = intent.getLongExtra(EXTRA_PET_ID, -1l);
+
+        if (id >= 0) {
+            setTitle( getString(R.string.editor_activity_title_edit_pet) );
+        }
+
     }
 
     /**
