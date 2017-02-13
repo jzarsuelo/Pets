@@ -125,7 +125,10 @@ public class CatalogActivity extends AppCompatActivity {
 
         PetCursorAdapter cursorAdapter = new PetCursorAdapter(this, cursor);
 
+        View emptyView = findViewById(R.id.empty_view);
+
         ListView listView = (ListView) findViewById(R.id.pet_list);
         listView.setAdapter(cursorAdapter);
+        listView.setEmptyView(emptyView);
     }
 }
